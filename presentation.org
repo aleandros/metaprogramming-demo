@@ -1,0 +1,126 @@
+
+* Metaprogramación en ruby
+
+
+
+** *Chilango Rails* - Febrero 2016
+
+
+*** Edgar Cabrera
+
+- Github: [[https://github.com/aleandros][aleandros]]
+- Twitter: [[https://twitter.com/aleandros][@aleandros]]
+ 
+
+
+* ¿Qué es la metaprogramación?
+
+
+* Suena a magia
+
+
+- Tratar código igual que otros *datos*
+
+- Programas que se modifican a sí mismos
+  al tiempo de ejecución
+
+
+* ¿Por qué?
+
+
+- Programas automatizan tareas repetitivas
+
+- A veces los programas son repetitivos
+
+- Mayor abstracción => Menor tiempo de desarrollo
+
+
+* Metaprogramación en ruby - orientación a objetos
+
+
+- No funciones, solo métodos (o mejor, *mensajes*)
+
+#+begin_src ruby
+  "x".upcase == "x".send(:upcase)
+#+end_src
+
+- Cada mensaje tiene un receptor (un objeto)
+
+#+begin_src ruby
+  self
+#+end_src
+
+- Los mensajes no son estáticos 
+
+
+* Metaprogramación en ruby - bloques
+
+
+- Pasar código de un lugar a otro
+
+- Excelente sintaxis (opinión)
+
+#+begin_src ruby
+  # minitest example
+  it 'is an array' do
+    [1, 2, 3].must_be_instance_of Array
+  end
+#+end_src
+
+
+* "Talk is cheap, show me the code"
+
+                              - Linus Torvalds
+
+
+* Clonemos bash
+
+
+- El ejemplo: [[file:wtf.sh][Monitoreo de memoria]]
+
+- Features:
+
+  - Procesos externos en primera clase
+
+  - Redirección de output
+    
+  - Comandos asíncronos
+
+  - Condicionales sobre procesos
+ 
+  - *Pipes*
+
+
+* Let's rock
+
+
+[[file:bashr][Nuestro canvas]]
+
+
+* Ventajas
+
+
+  - Abstraer conocimiento duplicado en el código
+
+  - Subir nivel de abstracción
+
+  - Aumentar legilibilidad
+
+  - Es inmensamente divertido
+
+
+* Riesgos
+
+
+- Errores extraños
+
+- APIs difíciles de extender (se escode complejidad)
+
+- Afectar código del cliente
+
+  - Violación del *Principile of Least Surprise*
+
+- *Overengineering*
+
+
+* ¿Preguntas?
