@@ -34,31 +34,28 @@
 
 - Mayor abstracción => Menor tiempo de desarrollo
 
+  
+* Metaprogramación en ruby
 
-* Metaprogramación en ruby - orientación a objetos
+** Orientación a objetos
 
-
-- No funciones, solo métodos (o mejor, *mensajes*)
-
+- No funciones, solo métodos (o mejor, *mensajes*).
+  
 #+begin_src ruby
   "x".upcase == "x".send(:upcase)
 #+end_src
 
-- Cada mensaje tiene un receptor (un objeto)
 
+- *Todo* mensaje tiene un receptor (un objeto)
+  
 #+begin_src ruby
   self
 #+end_src
 
-- Los mensajes no son estáticos 
 
-
-* Metaprogramación en ruby - bloques
-
+** Bloques
 
 - Pasar código de un lugar a otro
-
-- Excelente sintaxis (opinión)
 
 #+begin_src ruby
   # minitest example
@@ -93,8 +90,27 @@
 
 * Let's rock
 
+** Ejecución de procesos
+
+#+begin_src ruby
+require 'English' # Avoid perlisms
+
+[`echo "Hello world"`, $CHILD_STATUS.to_i]
+#+end_src
+
+
+** Pipelines
+
+#+begin_src ruby
+require 'open3'
+
+out, t = Open3.pipeline_r('echo hello world', "awk '{print $2}'")
+out.read
+#+end_src
+
 
 [[file:bashr][Nuestro canvas]]
+
 
 
 * Ventajas

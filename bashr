@@ -1,17 +1,4 @@
 #!/usr/bin/env ruby
 
-# ==== What we have ====
-
 require 'English' # avoid perlisms
 require 'open3'
-
-# Simple output capturing with backticks
-puts `echo "hello world"`
-$CHILD_STATUS.to_i
-
-# Processes pipiline via Open3
-out, t = Open3.pipeline_r('echo hello world', "awk '{print $1}'")
-puts out.read
-
-
-# ==== Start here ====
