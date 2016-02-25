@@ -134,7 +134,7 @@ out.read
 
 - Afectar código del cliente
 
-  - Violación del *Principile of Least Surprise*
+  - Violación del *Principle of Least Surprise*
 
 - *Overengineering*
 
