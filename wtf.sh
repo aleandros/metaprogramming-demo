@@ -10,14 +10,15 @@ fi
 most_memory() {
     ps aux --sort -%mem |
 	sed -n 2p |
-	awk '{print $11 " using " $4 "% of memory";}'
+	awk '{print $11; print $4}' |
+	paste -sd,
 }
 
 log_memory() {
     while true
     do
-	echo "$(date),$(most_memory)" >> "most-memory.log"
-	sleep 5
+	echo "$(date),$(most_memory)%" >> "most-memory.log"
+	sleep 2
     done
 }
 
