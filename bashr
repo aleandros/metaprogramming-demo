@@ -2,3 +2,103 @@
 
 require 'English' # avoid perlisms
 require 'open3'
+
+class Command
+  attr_reader :stdout, :status
+  
+  def initialize(name, *args, **opts)
+    @command = args.dup.unshift(name.to_s).join(' ')
+    @redirect = opts[:redirect]
+    @append = opts[:append]
+  end
+
+  def to_s
+    @command
+  end
+
+  def run
+    out = `#{@command} 2>/dev/null`
+    if @redirect
+      File.open(@redirect, 'w+') { |f| f.write out }
+    elsif @append
+      File.open(@append, 'a+') { |f| f.write out }
+    else
+      @stdout = out
+      puts @stdout
+    end
+    @status = $CHILD_STATUS.to_i
+  end
+end
+
+class DSL
+  def method_missing(name, *args, **opts)
+    if !`which #{name} 2>/dev/null`.empty?
+      action Command.new(name, *args, **opts)
+    else
+      super
+    end
+  end
+end
+
+class Pipe < DSL
+  def initialize
+    @cmds = []
+  end
+  
+  def action(action)
+    @cmds.push(action)
+  end
+
+  def run(&block)
+    instance_eval &block
+    out, t = Open3.pipeline_r(*@cmds.map(&:to_s))
+    out.read
+  end
+end
+class Bash < DSL
+  def action(cmd)
+    cmd.run
+    cmd.status == 0
+  end
+
+  def pipe(&block)
+    Pipe.new.run &block
+  end
+
+  def async(&block)
+    fork { Bash.run &block }
+  end
+  def self.run(&block)
+    Bash.new.instance_eval &block
+  end
+end
+
+target = ARGV[0]
+Bash.run do  
+  if !(pgrep target, redirect: '/dev/null')
+    abort "Not found"
+  end
+
+  async do
+    loop do
+      most_mem = pipe do
+        ps 'aux', '--sort', '-%mem'
+        sed '-n', '2p'
+        awk "'{print $11; print $4}'"
+        paste '-sd,'
+      end
+      echo "#{Time.new},#{most_mem}", append: 'my-log-1.log'
+      sleep 2    
+    end
+  end
+
+  loop do
+      count_process = pipe do
+        pgrep target
+        wc '-l'
+      end
+      echo "#{count_process.chomp} running for #{target}"
+      sleep 1
+  end
+
+end
